@@ -127,8 +127,7 @@ ANSs_ints2wrd = {w_i: w for w, w_i in ANSs_wrds2int.items()}
 for i in range(len(cleaned_ANSs)):
     cleaned_ANSs[i] += ' <EOS>'
 
-#Translating all the questions and the answers into integers
-#and Replacing all the words that were filtered out by <OUT>
+#Translating all the questions and the answers into integers and Replacing all the words that were filtered out by <OUT>
 Qs_into_int = []
 for q in cleaned_Qs:
     ints = []
@@ -148,8 +147,8 @@ for answr in cleaned_ANSs:
             ints.append(ANSs_wrds2int[wrd])
     ANSs_into_int.append(ints)
 
-#Sorting questions and answers by the length of questions
-#Excluding the long ones (more than 25 words)
+#Sorting questions and answers by the length of questions and excluding the long ones (more than 25 words)
+# (to speed up the training & help to reduce the loss)
 sorted_cleaned_Qs = []
 sorted_cleaned_ANSs = []
 for length in range(1, 25 + 1):
@@ -193,8 +192,7 @@ def encoder_rnn(rnn_inputs, rnn_size, num_layers, keep_prob, sequence_length):
 
 
 #Decoding the training set
-def decode_training_set(encoder_state, decoder_cell, decoder_embedded_input, sequence_length, decoding_scope,
-                        output_function, keep_prob, batch_size):
+def decode_training_set(encoder_state, decoder_cell, decoder_embedded_input, sequence_length, decoding_scope, output_function, keep_prob, batch_size):
     attention_states = tf.zeros([batch_size, 1, decoder_cell.output_size])
     attention_keys, attention_values, attention_score_function, attention_construct_function = tf.contrib.seq2seq.prepare_attention(
         attention_states, attention_option="bahdanau", num_units=decoder_cell.output_size)
